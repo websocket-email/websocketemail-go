@@ -39,7 +39,7 @@ func WaitForEmail(tok, to string) (<-chan ParsedEmail, func(), error) {
 	ch := make(chan ParsedEmail)
 	done := make(chan struct{})
 
-	u := url.URL{Scheme: "wss", Host: "nomock.email", Path: "/api/v1/subscribe/"}
+	u := url.URL{Scheme: "ws", Host: "35.189.47.241", Path: "/api/v1/subscribe"}
 
 	hdr := make(http.Header)
 	hdr.Add("Token", tok)
@@ -63,12 +63,11 @@ func WaitForEmail(tok, to string) (<-chan ParsedEmail, func(), error) {
 	go func() {
 		defer close(ch)
 		for {
-			_, _, err := c.ReadMessage()
+			email := ParsedEmail{}
+			err := c.ReadJSON(&email)
 			if err != nil {
 				return
 			}
-			// XXX parse message
-			email := ParsedEmail{}
 			select {
 			case <-done:
 				return

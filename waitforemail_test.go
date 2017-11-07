@@ -29,7 +29,7 @@ func GetTestEmailCredentials(t *testing.T) TestEmailCreds {
 	credsJson := os.Getenv("NOMOCKEMAIL_TEST_EMAIL_CREDS")
 	if credsJson == "" {
 		format, _ := json.Marshal(TestEmailCreds{})
-		t.Fatal("please set NOMOCKEMAIL_TEST_EMAIL_CREDS env variable. Format:  %s", string(format))
+		t.Fatalf("please set NOMOCKEMAIL_TEST_EMAIL_CREDS env variable. Format:  %s", string(format))
 	}
 
 	creds := TestEmailCreds{}
@@ -112,14 +112,14 @@ func TestWaitForEmail(t *testing.T) {
 		if !ok {
 			t.Fatal("unable to wait for email!")
 		}
-		if email.Subject != "hi" {
-			t.Fatalf("bad email to: %s", email.To)
-		}
 		if email.To != addr {
-			t.Fatalf("bad email to: %s", email.To)
+			t.Fatalf("bad email to: %#v", email)
 		}
-		if email.Body != "hello world" {
-			t.Fatalf("bad email body: %s", email.Body)
+		if email.Subject != "hi" {
+			t.Fatalf("bad email subject: %#v", email)
+		}
+		if strings.Trim(email.Body, " \n") != "hello world" {
+			t.Fatalf("bad email body: %#v", email)
 		}
 	case <-time.After(20 * time.Second):
 		t.Fatal("email was not recieved after 20 seconds!")

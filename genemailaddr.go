@@ -1,4 +1,4 @@
-package nomockemail
+package websocketemail
 
 import (
 	"crypto/rand"
@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-// Generate an email address of the form "^[a-f0-9]{32}\\@nomock\\.email$"
+// Generate an email address of the form "^[a-f0-9]{32}\\@websocket\\.email$"
 // using crypto/rand or return an error if it was not possible.
 func GenerateEmailAddress() (string, error) {
 	buf := make([]byte, 16, 16)
@@ -16,10 +16,10 @@ func GenerateEmailAddress() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return fmt.Sprintf("%s@nomock.email", hex.EncodeToString(buf)), nil
+	return fmt.Sprintf("%s@websocket.email", hex.EncodeToString(buf)), nil
 }
 
-// Generate an email address of the form "^[a-f0-9]{32}\\@nomock\\.email$"
+// Generate an email address of the form "^[a-f0-9]{32}\\@websocket\\.email$"
 // using crypto/rand or panic if it was not possible.
 func MustGenerateEmailAddress() string {
 	email, err := GenerateEmailAddress()

@@ -1,4 +1,4 @@
-package nomockemail
+package websocketemail
 
 import (
 	"crypto/tls"
@@ -12,9 +12,9 @@ import (
 )
 
 func GetTestToken(t *testing.T) string {
-	tok := os.Getenv("NOMOCKEMAIL_TEST_TOKEN")
+	tok := os.Getenv("WEBSOCKETEMAIL_TEST_TOKEN")
 	if tok == "" {
-		t.Fatal("please set NOMOCKEMAIL_TEST_TOKEN env variable")
+		t.Fatal("please set WEBSOCKETEMAIL_TEST_TOKEN env variable")
 	}
 	return tok
 }
@@ -26,10 +26,10 @@ type TestEmailCreds struct {
 }
 
 func GetTestEmailCredentials(t *testing.T) TestEmailCreds {
-	credsJson := os.Getenv("NOMOCKEMAIL_TEST_EMAIL_CREDS")
+	credsJson := os.Getenv("WEBSOCKETEMAIL_TEST_EMAIL_CREDS")
 	if credsJson == "" {
 		format, _ := json.Marshal(TestEmailCreds{})
-		t.Fatalf("please set NOMOCKEMAIL_TEST_EMAIL_CREDS env variable. Format:  %s", string(format))
+		t.Fatalf("please set WEBSOCKETEMAIL_TEST_EMAIL_CREDS env variable. Format:  %s", string(format))
 	}
 
 	creds := TestEmailCreds{}

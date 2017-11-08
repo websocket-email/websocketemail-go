@@ -1,4 +1,4 @@
-package nomockemail
+package websocketemail
 
 import (
 	"errors"
@@ -22,8 +22,8 @@ type ParsedEmail struct {
 	Body    string
 }
 
-// Connect to nomock.email over a secure connection and subscribe to emails received by address 'to'.
-// 'to' must be an email from the nomock.email domain or an error is returned.
+// Connect to websocket.email over a secure connection and subscribe to emails received by address 'to'.
+// 'to' must be an email from the websocket.email domain or an error is returned.
 //
 // On success WaitForEmail returns a channel which will get parsed emails from the remote end, and
 // a function which can be called to cleanup the worker goroutine. The returned channel
@@ -32,14 +32,14 @@ type ParsedEmail struct {
 // On failure may return ErrTooManyConcurrentRequests, ErrUnauthorized, ErrServerAtCapacityOrDownForMaintenance
 // or a generic error.
 func WaitForEmail(tok, to string) (<-chan ParsedEmail, func(), error) {
-	if !strings.HasSuffix(to, "@nomock.email") {
-		return nil, nil, errors.New("email must end with @nomock.email")
+	if !strings.HasSuffix(to, "@websocket.email") {
+		return nil, nil, errors.New("email must end with @websocket.email")
 	}
 
 	ch := make(chan ParsedEmail)
 	done := make(chan struct{})
 
-	u := url.URL{Scheme: "ws", Host: "35.189.47.241", Path: "/api/v1/subscribe"}
+	u := url.URL{Scheme: "wss", Host: "api.websocket.email", Path: "/v1/subscribe"}
 
 	hdr := make(http.Header)
 	hdr.Add("Token", tok)

@@ -1,4 +1,4 @@
-package nomockemail
+package websocketemail
 
 import (
 	"regexp"
@@ -8,7 +8,7 @@ import (
 func TestEmailAddressGeneration(t *testing.T) {
 	for i := 0; i < 100; i++ {
 		email := MustGenerateEmailAddress()
-		ok, err := regexp.MatchString("^[a-f0-9]{32}\\@nomock\\.email$", email)
+		ok, err := regexp.MatchString("^[a-f0-9]{32}\\@websocket\\.email$", email)
 		if err != nil {
 			t.Fatal(err)
 		}

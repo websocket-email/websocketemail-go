@@ -16,10 +16,11 @@ var (
 )
 
 type ParsedEmail struct {
-	To      string
-	From    string
-	Subject string
-	Body    string
+	To          string
+	From        string
+	Subject     string
+	ContentType string
+	Body        string
 }
 
 // Connect to websocket.email over a secure connection and subscribe to emails received by address 'to'.

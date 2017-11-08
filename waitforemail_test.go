@@ -2,7 +2,6 @@ package websocketemail
 
 import (
 	"crypto/tls"
-	"encoding/json"
 	"fmt"
 	"net/smtp"
 	"os"
@@ -19,54 +18,22 @@ func GetTestToken(t *testing.T) string {
 	return tok
 }
 
-type TestEmailCreds struct {
-	User     string
-	Password string
-	Server   string
-}
+func SendEmail(t *testing.T, from, to, subject, content string) {
 
-func GetTestEmailCredentials(t *testing.T) TestEmailCreds {
-	credsJson := os.Getenv("WEBSOCKETEMAIL_TEST_EMAIL_CREDS")
-	if credsJson == "" {
-		format, _ := json.Marshal(TestEmailCreds{})
-		t.Fatalf("please set WEBSOCKETEMAIL_TEST_EMAIL_CREDS env variable. Format:  %s", string(format))
-	}
-
-	creds := TestEmailCreds{}
-	err := json.Unmarshal([]byte(credsJson), &creds)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	return creds
-}
-
-func SendEmail(t *testing.T, to, subject, content string) {
-	creds := GetTestEmailCredentials(t)
-
-	portSepIdx := strings.LastIndex(creds.Server, ":")
-	if portSepIdx == -1 {
-		t.Fatal("'Server' must contain a port")
-	}
-
-	c, err := smtp.Dial(creds.Server)
+	c, err := smtp.Dial("websocket.email:25")
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer c.Close()
 
-	host := creds.Server[0:portSepIdx]
+	host := "websocket.email"
 	config := &tls.Config{ServerName: host}
 	err = c.StartTLS(config)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = c.Auth(smtp.PlainAuth("", creds.User, creds.Password, host))
-	if err != nil {
-		t.Fatal(err)
-	}
-	err = c.Mail(creds.User)
+	err = c.Mail(from)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -79,7 +46,7 @@ func SendEmail(t *testing.T, to, subject, content string) {
 		t.Fatal(err)
 	}
 
-	mail := fmt.Sprintf("To: %s\r\nSubject: %s\r\n\r\n%s\r\n", to, subject, content)
+	mail := fmt.Sprintf("From: %s\r\nTo: %s\r\nSubject: %s\r\n\r\n%s\r\n", from, to, subject, content)
 	_, err = w.Write([]byte(mail))
 	if err != nil {
 		w.Close()
@@ -97,22 +64,26 @@ func SendEmail(t *testing.T, to, subject, content string) {
 
 func TestWaitForEmail(t *testing.T) {
 	tok := GetTestToken(t)
-	addr := MustGenerateEmailAddress()
+	from := MustGenerateEmailAddress()
+	to := MustGenerateEmailAddress()
 
-	ch, cleanup, err := WaitForEmail(tok, addr)
+	ch, cleanup, err := WaitForEmail(tok, to)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer cleanup()
 
-	SendEmail(t, addr, "hi", "hello world")
+	SendEmail(t, from, to, "hi", "hello world")
 
 	select {
 	case email, ok := <-ch:
 		if !ok {
 			t.Fatal("unable to wait for email!")
 		}
-		if email.To != addr {
+		if email.From != from {
+			t.Fatalf("bad email from: %#v", email)
+		}
+		if email.To != to {
 			t.Fatalf("bad email to: %#v", email)
 		}
 		if email.Subject != "hi" {

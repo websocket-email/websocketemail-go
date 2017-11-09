@@ -24,7 +24,7 @@ type ParsedEmail struct {
 }
 
 // Connect to websocket.email over a secure connection and subscribe to emails received by address 'to'.
-// 'to' must be an email from the websocket.email domain or an error is returned.
+// 'forAddress' must be an email from the websocket.email domain or an error is returned.
 //
 // On success WaitForEmail returns a channel which will get parsed emails from the remote end, and
 // a function which can be called to cleanup the worker goroutine. The returned channel
@@ -32,8 +32,8 @@ type ParsedEmail struct {
 //
 // On failure may return ErrTooManyConcurrentRequests, ErrUnauthorized, ErrServerAtCapacityOrDownForMaintenance
 // or a generic error.
-func WaitForEmail(tok, to string) (<-chan ParsedEmail, func(), error) {
-	if !strings.HasSuffix(to, "@websocket.email") {
+func WaitForEmail(tok, forAddress string) (<-chan ParsedEmail, func(), error) {
+	if !strings.HasSuffix(forAddress, "@websocket.email") {
 		return nil, nil, errors.New("email must end with @websocket.email")
 	}
 
@@ -44,7 +44,7 @@ func WaitForEmail(tok, to string) (<-chan ParsedEmail, func(), error) {
 
 	hdr := make(http.Header)
 	hdr.Add("Token", tok)
-	hdr.Add("SubscribeTo", to)
+	hdr.Add("SubscribeTo", forAddress)
 
 	c, resp, err := websocket.DefaultDialer.Dial(u.String(), hdr)
 	if err != nil {

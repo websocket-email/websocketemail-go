@@ -65,15 +65,15 @@ func SendEmail(t *testing.T, from, to, subject, content string) {
 func TestWaitForEmail(t *testing.T) {
 	tok := GetTestToken(t)
 	from := MustGenerateEmailAddress()
-	to := MustGenerateEmailAddress()
+	forAddress := MustGenerateEmailAddress()
 
-	ch, cleanup, err := WaitForEmail(tok, to)
+	ch, cleanup, err := WaitForEmail(tok, forAddress)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer cleanup()
 
-	SendEmail(t, from, to, "hi", "hello world")
+	SendEmail(t, from, forAddress, "hi", "hello world")
 
 	select {
 	case email, ok := <-ch:
@@ -83,7 +83,7 @@ func TestWaitForEmail(t *testing.T) {
 		if email.From != from {
 			t.Fatalf("bad email from: %#v", email)
 		}
-		if email.To != to {
+		if email.To != forAddress {
 			t.Fatalf("bad email to: %#v", email)
 		}
 		if email.Subject != "hi" {
@@ -94,5 +94,27 @@ func TestWaitForEmail(t *testing.T) {
 		}
 	case <-time.After(20 * time.Second):
 		t.Fatal("email was not recieved after 20 seconds!")
+	}
+}
+
+// Wait 20 seconds for an email and then give up.
+func ExampleWaitForEmail() {
+	apiToken := "YOU_API_TOKEN"
+	forAddress := MustGenerateEmailAddress()
+
+	ch, cleanup, err := WaitForEmail(apiToken, forAddress)
+	if err != nil {
+		panic(err)
+	}
+	defer cleanup()
+
+	select {
+	case email, ok := <-ch:
+		if !ok {
+			panic("unable to wait for email!")
+		}
+		fmt.Printf("Got email: %#v", email)
+	case <-time.After(20 * time.Second):
+		panic("email was not recieved after 20 seconds!")
 	}
 }

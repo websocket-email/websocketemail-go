@@ -5,16 +5,7 @@ This code lets you subscribe to email addresses at the websocket.email domain fr
 
 ### Installing and using
 
-To build and install the development command line client into $GOPATH/bin run:
-
-```
-go get github.com/websocket-email/websocketemail-go/cmd/wsemail
-```
-
-
-To get a prebuilt version of the cli client download one from the [releases page](https://github.com/websocket-email/websocketemail-go/releases).
-
-To use the go library, follow the example provided in [this file](https://github.com/websocket-email/websocketemail-go/blob/master/cmd/wsemail/main.go)
+To use the go library, follow the example provided here [this file](https://github.com/websocket-email/wsemail)
 
 Library documentation can be found [here](https://godoc.org/github.com/websocket-email/websocketemail-go).
 

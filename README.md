@@ -24,5 +24,5 @@ We use [SemVer](http://semver.org/) for versioning.
 
 ## License
 
-See [LICENSE.md](LICENSE.md) file for details
+See [LICENSE.md](LICENSE) file for details
 

@@ -1,7 +1,7 @@
 # websocketemail-go
 
-This repository is the official go client and cli [websocket.email](https://websocket.email).
-This code lets you subscribe to email addresses at the websocket.email domain from the command line or from go code.
+This repository is the official go library for [websocket.email](https://websocket.email).
+This code lets you subscribe to email addresses at the websocket.email domain from the from go code.
 
 ### Installing and using
 
@@ -12,7 +12,7 @@ go get github.com/websocket-email/websocketemail-go/cmd/wsemail
 ```
 
 
-To get a prebuilt version of the client download one from the [releases page](https://github.com/websocket-email/websocketemail-go/releases).
+To get a prebuilt version of the cli client download one from the [releases page](https://github.com/websocket-email/websocketemail-go/releases).
 
 To use the go library, follow the example provided in [this file](https://github.com/websocket-email/websocketemail-go/blob/master/cmd/wsemail/main.go)
 
@@ -23,7 +23,7 @@ Library documentation can be found [here](https://godoc.org/github.com/websocket
 Get a valid API token from [websocket.email](https://websocket.email), change to the project directoryin your go path and run:
 
 ```
-export WEBSOCKETEMAIL_TEST_TOKEN="$YOUR_TOKEN_HERE"
+export WEBSOCKETEMAIL_TOKEN="$YOUR_TOKEN_HERE"
 go test
 ```
 

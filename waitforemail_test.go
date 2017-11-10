@@ -11,9 +11,9 @@ import (
 )
 
 func GetTestToken(t *testing.T) string {
-	tok := os.Getenv("WEBSOCKETEMAIL_TEST_TOKEN")
+	tok := os.Getenv("WEBSOCKETEMAIL_TOKEN")
 	if tok == "" {
-		t.Fatal("please set WEBSOCKETEMAIL_TEST_TOKEN env variable")
+		t.Fatal("please set WEBSOCKETEMAIL_TOKEN env variable")
 	}
 	return tok
 }

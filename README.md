@@ -9,9 +9,9 @@ Some API calls require an API token, which can be aquired for free from the webs
 
 ```
 apiToken := "YOU_API_TOKEN"
-forAddress := MustGenerateEmailAddress()
+forAddress := websocketemail.MustGenerateEmailAddress()
 
-ch, cleanup, err := WaitForEmail(apiToken, forAddress)
+ch, cleanup, err := websocketemail.WaitForEmail(apiToken, forAddress)
 if err != nil {
     panic(err)
 }
